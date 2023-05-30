@@ -1,0 +1,13 @@
+- name: Install CLI and run command
+  tasks:
+    - name: Download okta-artifactory-login  CLI package
+      command: curl -O https://repo.splunkdev.net/artifactory/generic/okta-cli/0.7.20230522-165736.90f1602/linux/okta-artifactory-login
+      args:
+        chdir: /etc/bin/
+
+    - name: Login using okta-artifactory-login CLI command
+      command: /etc/bin/okta-artifactory-login --client-id {{ client_id }} --client-private-key ~/.ssh/artifactory_private_key.json
+      # args:
+      #   chdir: /path/to/cli/installation/directory  # If the CLI requires a specific working directory
+      become: true  # If sudo privileges are required
+  run_once: true

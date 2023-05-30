@@ -1,2 +1,3 @@
 dependencies:
   - role: docker_login
+  - role: docker_login_artifactory_cloud
