@@ -61,3 +61,4 @@ role_build_variants:
 
 # skip_build_and_push is overrideable by using the skip-if-in-registry tag, but defaults to false to always perform the build
 skip_build_and_push: false
+docker_login_role: docker_login
