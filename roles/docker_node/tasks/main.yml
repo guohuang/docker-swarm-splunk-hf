@@ -57,6 +57,12 @@
     state: present
   become: true
 
+- name: Add splunker to docker group
+  user:
+    name: splunker
+    groups: docker
+    append: yes
+
 # - name: flag docker service for restart if any changes to installed packages
 #   set_fact:
 #     docker_service_state: restarted
