@@ -55,6 +55,7 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+    register: docker_install_results
   become: true
 
 - name: flag docker service for restart if any changes to installed packages
