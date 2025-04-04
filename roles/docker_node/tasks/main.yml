@@ -1,11 +1,61 @@
-- name: install docker packages
-  package:
-    name: "{{ item }}"
+# - name: install docker packages
+#   package:
+#     name: "{{ item }}"
+#     state: present
+#   become: true
+#   register: docker_install_results
+#   loop:
+#     - "{{ containerd_io_package }}"
+- name: Install prerequisites
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - firewalld
+      - python3-firewall
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Create keyrings directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Add Docker GPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  args:
+    creates: /etc/apt/keyrings/docker.asc
+  become: true
+
+- name: Set permissions on GPG key
+  file:
+    path: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+  become: true
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: true
+
+- name: Install Docker packages
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
     state: present
   become: true
-  register: docker_install_results
-  loop:
-    - "{{ containerd_io_package }}"
 
 - name: flag docker service for restart if any changes to installed packages
   set_fact:
