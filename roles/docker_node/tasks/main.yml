@@ -55,14 +55,13 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
-    register: docker_install_results
   become: true
 
-- name: flag docker service for restart if any changes to installed packages
-  set_fact:
-    docker_service_state: restarted
-  loop: "{{ docker_install_results.results }}"
-  when: item.changed
+# - name: flag docker service for restart if any changes to installed packages
+#   set_fact:
+#     docker_service_state: restarted
+#   loop: "{{ docker_install_results.results }}"
+#   when: item.changed
 
 # this will make use of the docker_service_state value set above
 # this will always get run to at least ensure the service is enabled/started, but will
