@@ -19,6 +19,11 @@
 #   run_once: true
 #   when: "('swarm_facts' in hostvars[item]['swarm_info']) and (manager_join_token is defined) and (manager_join_token!=hostvars[item]['swarm_info']['swarm_facts']['JoinTokens']['Manager'])"
 
+- name: Set default swarm manager
+  set_fact:
+    default_swarm_manager: "{{ groups['docker_swarm_managers'][0] }}"
+  run_once: true
+
 - name: Fetch swarm status for managers
   command: docker info --format='{{ "{{json .Swarm}}" }}'
   register: docker_swarm_status
