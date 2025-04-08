@@ -62,6 +62,7 @@
     name: splunker
     groups: docker
     append: yes
+    become: yes
 
 # - name: flag docker service for restart if any changes to installed packages
 #   set_fact:
