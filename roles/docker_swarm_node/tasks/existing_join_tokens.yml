@@ -53,18 +53,18 @@
 # Fetch tokens from the active manager if found
 - name: Fetch tokens from active swarm manager
   community.docker.docker_swarm_info:
-  register: existing_swarm_info
+  register: swarm_info
   when: >
     inventory_hostname == active_swarm_manager | default(default_swarm_manager) and
     active_swarm_found | default(false)
 
 - name: Set join tokens from existing swarm
   set_fact:
-    manager_join_token: "{{ existing_swarm_info.swarm_facts.JoinTokens.Manager }}"
-    worker_join_token: "{{ existing_swarm_info.swarm_facts.JoinTokens.Worker }}"
+    manager_join_token: "{{ swarm_info.swarm_facts.JoinTokens.Manager }}"
+    worker_join_token: "{{ swarm_info.swarm_facts.JoinTokens.Worker }}"
   when: >
     inventory_hostname == active_swarm_manager | default(default_swarm_manager) and
     active_swarm_found | default(false) and
-    existing_swarm_info is defined and 'swarm_facts' in existing_swarm_info
+    swarm_info is defined and 'swarm_facts' in swarm_info
 
 - debug: var=manager_join_token
