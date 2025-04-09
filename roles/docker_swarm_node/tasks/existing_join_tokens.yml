@@ -69,3 +69,4 @@
 
 - debug:
     msg: "{{ manager_join_token }}"
+  when: manager_join_token is defined
