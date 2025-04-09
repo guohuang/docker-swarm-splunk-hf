@@ -19,23 +19,23 @@
 #   run_once: true
 #   when: "('swarm_facts' in hostvars[item]['swarm_info']) and (manager_join_token is defined) and (manager_join_token!=hostvars[item]['swarm_info']['swarm_facts']['JoinTokens']['Manager'])"
 
-- name: Set default swarm manager
-  set_fact:
-    default_swarm_manager: "{{ groups['docker_swarm_managers'][0] }}"
-  run_once: true
+# - name: Set default swarm manager
+#   set_fact:
+#     default_swarm_manager: "{{ groups['docker_swarm_managers'][0] }}"
+#   run_once: true
 
 - name: Fetch swarm status for managers
   command: docker info --format='{{ "{{json .Swarm}}" }}'
   register: docker_swarm_status
   when: "'docker_swarm_managers' in group_names"
 
-- debug: var=docker_swarm_status.stdout
+# - debug: var=docker_swarm_status.stdout
 
 - name: Parse swarm status
   set_fact:
     swarm_local_node_state: "{{ (docker_swarm_status.stdout | from_json).LocalNodeState }}"
     swarm_control_available: "{{ (docker_swarm_status.stdout | from_json).ControlAvailable }}"
-  when: "'docker_swarm_managers' in group_names and docker_swarm_status.stdout | length > 0"
+  when: "'docker_swarm_managers' in group_names and docker_swarm_status.stdout | length > 0 and (docker_swarm_status.stdout | from_json).LocalNodeState is defined"
 
 # Loop through managers to find an active one
 - name: Find active swarm manager
@@ -54,8 +54,8 @@
 - name: Fetch tokens from active swarm manager
   community.docker.docker_swarm_info:
   register: swarm_info
+  delegate_to: "{{ active_swarm_manager }}"
   when: >
-    inventory_hostname == active_swarm_manager | default(default_swarm_manager) and
     active_swarm_found | default(false)
 
 - name: Set join tokens from existing swarm
@@ -63,8 +63,9 @@
     manager_join_token: "{{ swarm_info.swarm_facts.JoinTokens.Manager }}"
     worker_join_token: "{{ swarm_info.swarm_facts.JoinTokens.Worker }}"
   when: >
-    inventory_hostname == active_swarm_manager | default(default_swarm_manager) and
     active_swarm_found | default(false) and
     swarm_info is defined and 'swarm_facts' in swarm_info
+  run_once: true
 
-- debug: var=manager_join_token
+- debug:
+    msg: "{{ manager_join_token }}"
