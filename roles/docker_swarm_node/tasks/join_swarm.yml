@@ -8,6 +8,8 @@
     swarm_local_node_state: "{{ (docker_swarm_status.stdout | from_json).LocalNodeState }}"
   when: docker_swarm_status.stdout | length > 0
 
+- debug:
+    var: docker_swarm_status.stdout
 
 - name: bring up managers not currently in the swarm
   docker_swarm:
