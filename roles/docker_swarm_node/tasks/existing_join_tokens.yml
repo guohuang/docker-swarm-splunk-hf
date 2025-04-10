@@ -56,7 +56,9 @@
   register: swarm_info
   delegate_to: "{{ active_swarm_manager }}"
   when: >
-    active_swarm_found | default(false)
+    active_swarm_found | default(false) and
+    hostvars[active_swarm_manager]['swarm_control_available'] | default(false)
+  become: true
 
 - name: Set join tokens from existing swarm
   set_fact:
