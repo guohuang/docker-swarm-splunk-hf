@@ -1,3 +1,31 @@
+- name: Ensure old CentOS repos are disabled
+  command: sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*.repo
+  become: true
+  changed_when: true
+
+- name: Set CentOS Vault as baseurl
+  command: sed -i 's/#baseurl/baseurl/g' /etc/yum.repos.d/CentOS-*.repo
+  become: true
+  changed_when: true
+
+- name: Update CentOS repo to use vault.centos.org
+  replace:
+    path: /etc/yum.repos.d/CentOS-Base.repo
+    regexp: 'mirror.centos.org'
+    replace: 'vault.centos.org'
+  become: true
+
+- name: Install yum-utils for repository management
+  yum:
+    name: yum-utils
+    state: present
+  become: true
+
+- name: Add Docker CE repository for CentOS
+  command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  become: true
+  changed_when: true
+  
 - name: install docker packages
   package:
     name: "{{ item }}"
