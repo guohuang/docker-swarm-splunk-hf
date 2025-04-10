@@ -1,11 +1,25 @@
+- name: Check swarm status on all nodes
+  command: docker info --format='{{ "{{json .Swarm}}" }}'
+  register: docker_swarm_status
+  changed_when: false
+
+- name: Parse swarm status
+  set_fact:
+    swarm_local_node_state: "{{ (docker_swarm_status.stdout | from_json).LocalNodeState }}"
+  when: docker_swarm_status.stdout | length > 0
+
+
 - name: bring up managers not currently in the swarm
   docker_swarm:
     state: join
     advertise_addr: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     remote_addrs:
-      - "{{ hostvars[swarm_join_member]['ansible_default_ipv4']['address'] }}"
+      - "{{ hostvars[active_swarm_manager]['ansible_default_ipv4']['address'] }}"
     join_token: "{{ manager_join_token }}"
-  when: "('docker_swarm_managers' in group_names)"
+  when: >
+    'docker_swarm_managers' in group_names and
+    manager_join_token is defined and
+    (swarm_local_node_state is not defined or swarm_local_node_state != 'active')
   become: true
 
 # workers don't return swarm_facts, so this runs even for workers already in the swarm
@@ -14,7 +28,10 @@
     state: join
     advertise_addr: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     remote_addrs:
-      - "{{ hostvars[swarm_join_member]['ansible_default_ipv4']['address'] }}"
+      - "{{ hostvars[active_swarm_manager]['ansible_default_ipv4']['address'] }}"
     join_token: "{{ worker_join_token }}"
-  when: "'docker_swarm_workers' in group_names"
+  when: >
+    'docker_swarm_workers' in group_names and
+    worker_join_token is defined and
+    (swarm_local_node_state is not defined or swarm_local_node_state != 'active')
   become: true
