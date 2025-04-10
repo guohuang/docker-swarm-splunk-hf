@@ -3,7 +3,9 @@
 - include_tasks: existing_join_tokens.yml
 
 - when: "('docker_swarm_managers' in group_names) and (manager_join_token is not defined)"
-  include_tasks: new_swarm.yml
+  block:
+    - include_tasks: new_swarm.yml
+    - include_tasks: existing_join_tokens.yml #rerun this to get the token as well as the active manager
 
 - when: "('docker_swarm_managers' in group_names) and (manager_join_token is defined)"
   include_tasks: join_swarm.yml
