@@ -33,7 +33,7 @@
     - "{{ containerd_io_package }}"
     - "{{ docker_ce_package }}"
     - firewalld
-    - python3-firewall
+    - python-firewall
 
 - name: flag docker service for restart if any changes to installed packages
   set_fact:
