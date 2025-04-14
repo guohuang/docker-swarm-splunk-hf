@@ -1,31 +1,31 @@
-- name: Check for existing CentOS repo files
-  stat:
-    path: /etc/yum.repos.d/CentOS-Base.repo
-  register: centos_repo_stat
-  become: true
+# - name: Check for existing CentOS repo files
+#   stat:
+#     path: /etc/yum.repos.d/CentOS-Base.repo
+#   register: centos_repo_stat
+#   become: true
 
-- name: Create CentOS Vault repo if missing
-  copy:
-    dest: /etc/yum.repos.d/CentOS-Base.repo
-    content: |
-      [base]
-      name=CentOS-7 - Base
-      baseurl=http://vault.centos.org/centos/7/os/x86_64/
-      gpgcheck=1
-      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-  when: not centos_repo_stat.stat.exists
-  become: true
+# - name: Create CentOS Vault repo if missing
+#   copy:
+#     dest: /etc/yum.repos.d/CentOS-Base.repo
+#     content: |
+#       [base]
+#       name=CentOS-7 - Base
+#       baseurl=http://vault.centos.org/centos/7/os/x86_64/
+#       gpgcheck=1
+#       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+#   when: not centos_repo_stat.stat.exists
+#   become: true
 
-- name: Install yum-utils for repository management
-  yum:
-    name: yum-utils
-    state: present
-  become: true
+# - name: Install yum-utils for repository management
+#   yum:
+#     name: yum-utils
+#     state: present
+#   become: true
 
-- name: Add Docker CE repository for CentOS
-  command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  become: true
-  changed_when: true
+# - name: Add Docker CE repository for CentOS
+#   command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+#   become: true
+#   changed_when: true
 
 - name: install docker packages
   package:
