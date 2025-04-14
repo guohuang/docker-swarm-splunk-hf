@@ -6,3 +6,4 @@
 - name: Include OS-specific Docker tasks
   include_tasks: "{{ docker_task_file }}"
   when: "'docker_swarm_managers' in group_names or 'docker_swarm_workers' in group_names"
+  become: true
