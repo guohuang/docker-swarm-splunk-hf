@@ -1,15 +1,15 @@
-- name: Check swarm status on all nodes
-  command: docker info --format='{{ "{{json .Swarm}}" }}'
-  register: docker_swarm_status
-  changed_when: false
+# - name: Check swarm status on all nodes
+#   command: docker info --format '{{ "{{json .}}" }}'
+#   register: docker_swarm_status
+#   changed_when: false
 
-- name: Parse swarm status
-  set_fact:
-    swarm_local_node_state: "{{ (docker_swarm_status.stdout | from_json).LocalNodeState }}"
-  when: docker_swarm_status.stdout | length > 0
+# - name: Parse swarm status
+#   set_fact:
+#     swarm_local_node_state: "{{ (docker_swarm_status.stdout | from_json).LocalNodeState }}"
+#   when: docker_swarm_status.stdout | length > 0
 
-- debug:
-    var: docker_swarm_status.stdout
+# - debug:
+#     var: docker_swarm_status.stdout
 
 - name: bring up managers not currently in the swarm
   docker_swarm:
