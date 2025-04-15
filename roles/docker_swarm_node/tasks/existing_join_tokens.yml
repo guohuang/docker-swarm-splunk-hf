@@ -33,7 +33,7 @@
 - debug: var=docker_swarm_status.stdout
 
 - name: Extract LocalNodeState (if Swarm is set)
-  shell: echo '{{ docker_info_json.stdout }}' | jq -r '.Swarm.LocalNodeState // empty'
+  shell: echo '{{ docker_swarm_status.stdout }}' | jq -r '.Swarm.LocalNodeState // empty'
   register: local_node_state
   changed_when: false
   become: true
