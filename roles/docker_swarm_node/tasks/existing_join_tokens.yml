@@ -10,6 +10,7 @@
   shell: echo '{{ docker_swarm_status.stdout }}' | jq -r '.Swarm.LocalNodeState // empty'
   register: local_node_state
   changed_when: false
+  when: docker_swarm_status.stdout is search('"LocalNodeState"')
 
 - name: Set swarm_local_node_state fact
   set_fact:
@@ -19,6 +20,7 @@
   shell: echo '{{ docker_swarm_status.stdout }}' | jq -r '.Swarm.ControlAvailable // empty'
   register: control_available
   changed_when: false
+  when: docker_swarm_status.stdout is search('"ControlAvailable"')
 
 - name: Set swarm_control_available fact
   set_fact:
