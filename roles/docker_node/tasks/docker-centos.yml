@@ -3,12 +3,14 @@
     path: /etc/yum.repos.d/CentOS-Base.repo
     regexp: "^mirrorlist="
     replace: "#mirrorlist="
+  become: true
 
 - name: Uncomment and update baseurl to point to vault.centos.org
   replace:
     path: /etc/yum.repos.d/CentOS-Base.repo
     regexp: "^#baseurl=http://mirror.centos.org"
     replace: "baseurl=http://vault.centos.org"
+  become: true
 
 - name: Install yum-utils for repository management
   yum:
