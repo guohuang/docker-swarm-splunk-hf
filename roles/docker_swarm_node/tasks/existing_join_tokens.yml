@@ -30,13 +30,22 @@
   when: "'docker_swarm_managers' in group_names"
   become: true
 
-# - debug: var=docker_swarm_status.stdout
+- debug: var=docker_swarm_status.stdout
+
+- name: Extract LocalNodeState (if Swarm is set)
+  shell: echo '{{ docker_info_json.stdout }}' | jq -r '.Swarm.LocalNodeState // empty'
+  register: local_node_state
+  changed_when: false
+  become: true
 
 - name: Parse swarm status
   set_fact:
     swarm_local_node_state: "{{ (docker_swarm_status.stdout | jq '.Swarm').LocalNodeState }}"
     swarm_control_available: "{{ (docker_swarm_status.stdout | jq '.Swarm').ControlAvailable }}"
-  when: "'docker_swarm_managers' in group_names and docker_swarm_status.stdout | length > 0 and (docker_swarm_status.stdout | jq '.Swarm').LocalNodeState is defined"
+  when: >
+    'docker_swarm_managers' in group_names and
+    docker_swarm_status.stdout | length > 0 and
+    local_node_state.stdout != ""
 
 # Loop through managers to find an active one
 - name: Find active swarm manager
