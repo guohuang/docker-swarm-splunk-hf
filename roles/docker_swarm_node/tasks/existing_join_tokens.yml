@@ -28,6 +28,7 @@
   command: docker info --format='{{ "{{json .Swarm}}" }}'
   register: docker_swarm_status
   when: "'docker_swarm_managers' in group_names"
+  become: true
 
 # - debug: var=docker_swarm_status.stdout
 
@@ -72,7 +73,7 @@
 - debug:
     msg: "Manager token: {{ manager_join_token }}"
   when: manager_join_token is defined
-  
+
 - debug:
     msg: "Worker token: {{ worker_join_token }}"
   when: worker_join_token is defined
