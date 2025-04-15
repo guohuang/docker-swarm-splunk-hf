@@ -2,7 +2,6 @@
 - name: ask docker for a list of images
   command: docker images
   become: "{{ true if docker_become_user is defined else false }}"
-  # become_user: "{{ docker_become_user }}"
   # try every 10 seconds for a minute to see if the service comes up
   delay: 10
   retries: 6

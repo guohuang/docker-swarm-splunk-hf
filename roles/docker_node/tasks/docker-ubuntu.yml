@@ -4,8 +4,6 @@
       - ca-certificates
       - curl
       - jq
-      # - firewalld
-      # - python3-firewall
     state: present
     update_cache: yes
   become: true
