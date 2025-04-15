@@ -22,22 +22,6 @@
     creates: /etc/yum.repos.d/docker-ce.repo
   become: true
 
-- name: Ensure python2 is installed
-  yum:
-    name: python2
-    state: present
-
-- name: Download get-pip.py for Python 2
-  get_url:
-    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
-    dest: /tmp/get-pip.py
-    mode: "0755"
-
-- name: Install pip for Python 2
-  command: python2 /tmp/get-pip.py
-  args:
-    creates: /usr/local/bin/pip
-
 - name: install docker packages
   package:
     name: "{{ item }}"
@@ -49,7 +33,7 @@
     - "{{ containerd_io_package }}"
     - "{{ docker_ce_package }}"
     - firewalld
-    - python-firewall
+    - python3-firewall
 
 - name: flag docker service for restart if any changes to installed packages
   set_fact:
