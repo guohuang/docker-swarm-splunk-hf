@@ -1,5 +1,6 @@
 - name: firewall ports
   include_tasks: swarm_firewall_ports.yml
+  when: "'enable_firewall' in ansible_run_tags"
   tags: enable_firewall
 
 - include_tasks: existing_join_tokens.yml
