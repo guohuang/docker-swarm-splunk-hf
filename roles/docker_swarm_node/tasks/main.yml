@@ -1,4 +1,6 @@
-# - include_tasks: swarm_firewall_ports.yml
+- name: firewall ports
+  include_tasks: swarm_firewall_ports.yml
+  tags: enable_firewall
 
 - include_tasks: existing_join_tokens.yml
 
