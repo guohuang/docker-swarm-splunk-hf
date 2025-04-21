@@ -1,8 +1,6 @@
 - name: Set OS-specific Docker task file
   set_fact:
     docker_task_file: "{{ 'docker-centos.yml' if ansible_distribution == 'CentOS' else 'docker-ubuntu.yml' }}"
-  when: "'docker_swarm_managers' in group_names or 'docker_swarm_workers' in group_names"
 
 - name: Include OS-specific Docker tasks
   include_tasks: "{{ docker_task_file }}"
-  when: "'docker_swarm_managers' in group_names or 'docker_swarm_workers' in group_names"
