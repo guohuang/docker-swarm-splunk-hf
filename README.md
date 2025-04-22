@@ -91,6 +91,38 @@ To enable and configure `firewalld`, run the playbook with the `enable_firewall`
 
 ```bash
 ansible-playbook -i <path-to-inventory-file> docker_nodes_provision.yml --tags enable_firewall
+```
+
+### Additional Configuration
+
+You can also specify additional packages to be installed on CentOS and Ubuntu hosts by defining the following variables in your inventory:
+
+- `centos_packages`: A list of additional packages to install on CentOS hosts.
+- `ubuntu_packages`: A list of additional packages to install on Ubuntu hosts.
+
+For example:
+
+```yaml
+centos_packages:
+  - vim
+  - git
+  - curl
+
+ubuntu_packages:
+  - vim
+  - git
+  - curl
+```
+
+The playbook uses the `ubuntu_prerequisites` variable to define the list of prerequisite packages that need to be installed on Ubuntu hosts. These packages are installed before configuring Docker.
+
+You can customize the `ubuntu_prerequisites` variable in your inventory or group variables file. For example:
+
+```yaml
+ubuntu_prerequisites:
+  - curl
+  - jq
+```
 
 ## Examples
 
