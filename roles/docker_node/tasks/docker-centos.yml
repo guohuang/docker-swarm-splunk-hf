@@ -26,10 +26,11 @@
 
 - name: install docker packages
   package:
-    name: "{{ centos_packages }}"
+    name: "{{ item }}"
     state: present
   become: true
   register: docker_install_results
+  loop: "{{ centos_packages }}"
 
 - name: flag docker service for restart if any changes to installed packages
   set_fact:
