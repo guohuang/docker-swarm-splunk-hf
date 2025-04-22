@@ -1,7 +1,6 @@
 - name: Install prerequisites
   apt:
-    name:
-      - "{{ ubuntu_prerequisites }}"
+    name: "{{ ubuntu_prerequisites }}"
     state: present
     update_cache: yes
   become: true
@@ -39,8 +38,7 @@
 
 - name: Install Docker packages
   apt:
-    name:
-      - "{{ ubuntu_docker_packages}}"
+    name: "{{ ubuntu_docker_packages}}"
     state: present
   become: true
 
