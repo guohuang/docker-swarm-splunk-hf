@@ -1,9 +1,7 @@
 - name: Install prerequisites
   apt:
     name:
-      - ca-certificates
-      - curl
-      - jq
+      - "{{ ubuntu_prerequisites }}"
     state: present
     update_cache: yes
   become: true
@@ -42,11 +40,7 @@
 - name: Install Docker packages
   apt:
     name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
+      - "{{ ubuntu_docker_packages}}"
     state: present
   become: true
 
