@@ -1,6 +1,17 @@
-- name: Set OS-specific Docker task file
+- name: Set OS-specific Docker task file for CentOS
+  when: ansible_distribution == 'CentOS'
   set_fact:
-    docker_task_file: "{{ 'docker-centos.yml' if ansible_distribution == 'CentOS' else 'docker-ubuntu.yml' }}"
+    docker_task_file: "docker-centos.yml"
+
+- name: Set OS-specific Docker task file for Ubuntu
+  when: ansible_distribution == 'Ubuntu'
+  set_fact:
+    docker_task_file: "docker-ubuntu.yml"
+
+- name: Fail if the OS is not supported
+  when: ansible_distribution not in ['CentOS', 'Ubuntu']
+  fail:
+    msg: "Unsupported OS: {{ ansible_distribution }}"
 
 - name: Include OS-specific Docker tasks
   include_tasks: "{{ docker_task_file }}"
