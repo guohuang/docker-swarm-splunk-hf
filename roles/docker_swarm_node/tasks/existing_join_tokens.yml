@@ -55,11 +55,3 @@
     active_swarm_found | default(false) and
     swarm_info is defined and 'swarm_facts' in swarm_info
   run_once: true
-
-# - debug:
-#     msg: "Manager token: {{ manager_join_token }}"
-#   when: manager_join_token is defined
-
-# - debug:
-#     msg: "Worker token: {{ worker_join_token }}"
-#   when: worker_join_token is defined
