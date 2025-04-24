@@ -114,6 +114,23 @@ ubuntu_packages:
   - curl
 ```
 
+Additionally, the playbook uses the `system_architecture` variable to determine the architecture of the system (e.g., `amd64`, `arm64`) when adding the Docker repository. This ensures compatibility with the host's architecture.
+
+You can define the `system_architecture` variable explicitly in your inventory or allow it to be automatically detected by Ansible. For example:
+
+```yaml
+system_architecture: amd64
+```
+
+This variable is used in tasks like adding the Docker repository:
+
+```yaml
+apt_repository:
+  repo: "deb [arch={{ system_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  state: present
+  filename: docker
+```
+
 The playbook uses the `ubuntu_prerequisites` variable to define the list of prerequisite packages that need to be installed on Ubuntu hosts. These packages are installed before configuring Docker.
 
 You can customize the `ubuntu_prerequisites` variable in your inventory or group variables file. For example:
